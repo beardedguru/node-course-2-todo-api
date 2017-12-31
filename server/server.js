@@ -9,6 +9,8 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 var app = express();
+// set up for heroku
+const port = process.env.PORT || 3000;
 
 // middleware
 app.use(bodyParser.json());
@@ -25,8 +27,9 @@ app.post('/todos', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('Started on port 3000');
+// gets app ready to read from heroku port or local port
+app.listen(port, () => {
+  console.log(`Started up at port ${port}`);
 })
 
 app.get('/todos', (req, res) => {
