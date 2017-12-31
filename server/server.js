@@ -8,9 +8,11 @@ var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
-var app = express();
 // set up for heroku
 const port = process.env.PORT || 3000;
+
+// set our main app to use Express()
+var app = express();
 
 // middleware
 app.use(bodyParser.json());
