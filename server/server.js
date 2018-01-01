@@ -1,3 +1,4 @@
+require('./config/config');
 // library imports
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,7 +11,7 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 // set up for heroku
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 // set our main app to use Express()
 var app = express();
