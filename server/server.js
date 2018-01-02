@@ -19,6 +19,9 @@ var app = express();
 // middleware
 app.use(bodyParser.json());
 
+///////////////////////////////////////
+// create a new todos on the /todos url
+///////////////////////////////////////
 app.post('/todos', (req, res) => {
   var todo = new Todo({
     text: req.body.text
@@ -31,11 +34,16 @@ app.post('/todos', (req, res) => {
   });
 });
 
+////////////////////////////////////////////////////////
 // gets app ready to read from heroku port or local port
+////////////////////////////////////////////////////////
 app.listen(port, () => {
   console.log(`Started up at port ${port}`);
 })
 
+//////////////////////////////////////////////
+// gets every todos from the /todos collection
+//////////////////////////////////////////////
 app.get('/todos', (req, res) => {
   Todo.find().then((todos) => {
     res.send({
@@ -46,7 +54,9 @@ app.get('/todos', (req, res) => {
   });
 });
 
-// GET /todos/1234324
+///////////////////////////////////////
+// Search for todos related to this :id
+///////////////////////////////////////
 app.get('/todos/:id', (req, res) => {
   var id = req.params.id;
 
@@ -79,7 +89,9 @@ app.get('/todos/:id', (req, res) => {
 
 });
 
-// Delete Route
+/////////////////////////////////////////////////
+// Delete todos that are associated with this :id
+/////////////////////////////////////////////////
 app.delete('/todos/:id', (req, res) => {
   // get the id
   var id = req.params.id;
@@ -106,6 +118,9 @@ app.delete('/todos/:id', (req, res) => {
   });
 });
 
+/////////////////////////////////////////////////
+// Update todos that are associated with this :id
+/////////////////////////////////////////////////
 app.patch('/todos/:id', (req, res) => {
   var id = req.params.id;
   var body = _.pick(req.body, ['text', 'completed']);
@@ -126,6 +141,7 @@ app.patch('/todos/:id', (req, res) => {
   }, {
     new: true
   }).then((todo) => {
+
     if (!todo) {
       return resizeBy.status(404).send();
     }
@@ -133,10 +149,31 @@ app.patch('/todos/:id', (req, res) => {
     res.send({
       todo
     });
+
   }).catch((e) => {
     res.status(400).send();
   })
 })
+
+/////////////////////////////////////////////////////////////
+// POST /users create new user registration in the /todos app
+/////////////////////////////////////////////////////////////
+app.post('/users', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
+
+  User.findByToken
+  user.generateAuthToken
+
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  }).catch((e) => {
+    res.status(400).send(e);
+  });
+});
+
 
 module.exports = {
   app
